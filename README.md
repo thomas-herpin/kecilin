@@ -3,6 +3,12 @@
 </p>
 
 <p align="center">
+  <a href="https:/kecilin.up.railway.app" target="_blank">
+    <img src="https://img.shields.io/badge/Live_Demo-Visit_Website-7C3AED?style=for-the-badge&logo=rocket" alt="Live Demo" />
+  </a>
+</p>
+
+<p align="center">
   <a href="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml">
     <img src="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml/badge.svg?branch=main" alt="Build Status" />
   </a>
