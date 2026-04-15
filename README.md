@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Kecilin-URL%20Shortener-7C3AED?style=for-the-badge&logo=link&logoColor=white" alt="Kecilin" />
+  Kecilin — URL Shortener
 </p>
 
 <p align="center">
@@ -14,14 +14,9 @@
   </a>
   <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white" alt="PHP 8.2+" />
   <img src="https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white" alt="Laravel 12" />
-  <img src="https://img.shields.io/badge/license-MIT-blue" alt="License MIT" />
 </p>
 
 ---
-
-# Kecilin — URL Shortener
-
-**Link panjang? Kecilin aja.**
 
 ## Deskripsi
 
@@ -32,7 +27,6 @@ Kecilin adalah layanan manajemen tautan modern berbasis web yang dibangun dengan
 - **Pelacakan klik real-time** — pantau performa tautan dengan dashboard analitik tren harian
 - **Filter domain berbahaya** — blacklist otomatis mencegah penyalahgunaan platform
 - **Manajemen tautan** — edit URL tujuan atau hapus tautan kapan saja
-- **Deep Space Theme** — antarmuka minimalis dengan palet zinc-50, violet-600, dan fuchsia-500
 
 ## Cara Menjalankan Aplikasi
 
@@ -160,37 +154,3 @@ Memverifikasi alur end-to-end antar komponen dengan database nyata (SQLite in-me
 | `CollisionHandlingTest` | Slug bertabrakan di-regenerasi otomatis; exception setelah 10x gagal |
 | `LinkCreationWorkflowTest` | Workflow lengkap: input → DB → QR Code + tautan pendek di view |
 | `NotFoundAndCascadeTest` | Slug tidak ada → 404 kustom; hapus tautan → cascade delete klik |
-
-## Deploy ke Railway
-
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template)
-
-1. Push repo ke GitHub
-2. Buka [railway.app](https://railway.app) → New Project → Deploy from GitHub repo → pilih repo ini
-3. Tambah service MySQL: klik **+** → Database → MySQL
-4. Set environment variables berikut di tab **Variables**:
-
-```
-APP_NAME=Kecilin
-APP_ENV=production
-APP_KEY=             # generate: php artisan key:generate --show
-APP_DEBUG=false
-APP_URL=https://your-app.up.railway.app
-
-DB_CONNECTION=mysql
-DB_HOST=${{MySQL.MYSQLHOST}}
-DB_PORT=${{MySQL.MYSQLPORT}}
-DB_DATABASE=${{MySQL.MYSQLDATABASE}}
-DB_USERNAME=${{MySQL.MYSQLUSER}}
-DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
-
-SESSION_DRIVER=database
-CACHE_STORE=database
-QUEUE_CONNECTION=database
-```
-
-Railway akan otomatis menjalankan build via `nixpacks.toml`, menjalankan migrasi, lalu menyajikan aplikasi.
-
-### CI/CD
-
-Seluruh test suite dijalankan otomatis via **GitHub Actions** pada setiap `push` dan `pull_request` ke branch `main`, menggunakan PHP 8.2 dan SQLite in-memory.
