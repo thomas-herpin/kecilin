@@ -30,7 +30,7 @@ jobs:
           node-version: '20'
 
       - name: Install npm dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build frontend assets
         run: npm run build
@@ -46,3 +46,4 @@ jobs:
         with:
           files: coverage.xml
           fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
