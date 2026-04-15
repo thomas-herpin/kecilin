@@ -1,13 +1,10 @@
 <p align="center">
-  Kecilin — URL Shortener
+  <h1 align="center">Kecilin</h1>
 </p>
 
 <p align="center">
   <a href="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml">
     <img src="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml/badge.svg?branch=main" alt="Build Status" />
-  </a>
-  <a href="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml">
-    <img src="https://img.shields.io/badge/tests-passing-brightgreen?logo=github" alt="Tests" />
   </a>
   <a href="https://codecov.io/gh/thomas-herpin/kecilin">
     <img src="https://codecov.io/gh/thomas-herpin/kecilin/branch/main/graph/badge.svg" alt="Coverage" />
