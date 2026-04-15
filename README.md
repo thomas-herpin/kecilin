@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://web-production-2be88.up.railway.app" target="_blank">
+  <a href="https://kecilin.up.railway.app" target="_blank">
     <img src="https://img.shields.io/badge/Kunjungi_Website-7C3AED?style=for-the-badge&logo=rocket&logoColor=white" alt="Kunjungi Website" />
   </a>
 </p>
