@@ -81,34 +81,59 @@
 
 {{-- Result Section --}}
 @if(isset($link))
-<section class="max-w-2xl mx-auto px-6 pb-16 animate-slide-up">
-    <div class="bg-zinc-900 rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl">
-        <div class="absolute top-0 right-0 p-8 opacity-10">
-            <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M10.59 13.41L14.17 9.83C14.56 9.44 14.56 8.8 14.17 8.41C13.78 8.02 13.14 8.02 12.75 8.41L9.17 11.99L7.59 10.41C7.2 10.02 6.56 10.02 6.17 10.41C5.78 10.8 5.78 11.44 6.17 11.83L8.47 14.13C8.86 14.52 9.5 14.52 9.89 14.13L10.59 13.41ZM19 3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.11 21 21 20.1 21 19V5C21 3.9 20.11 3 19 3Z"/></svg>
-        </div>
-        
-        <div class="relative z-10 flex flex-col md:flex-row gap-8 items-center">
-            <div class="flex-1 space-y-4 text-center md:text-left">
-                <h2 class="text-2xl font-black italic tracking-tight">SIAP DIGUNAKAN!</h2>
-                <p class="text-zinc-400 text-sm font-medium">Klik untuk menyalin tautan barumu:</p>
-                <div class="group relative cursor-pointer" onclick="copyToClipboard('{{ $shortUrl }}')">
-                    <div class="text-3xl md:text-4xl font-black text-violet-400 break-all hover:text-white transition-colors duration-300">
-                        {{ str_replace(['http://', 'https://'], '', $shortUrl) }}
-                    </div>
-                    <span id="copy-status" class="absolute -top-6 left-0 text-fuchsia-400 text-xs font-bold opacity-0 transition-opacity">TERSALIN!</span>
-                </div>
-            </div>
+    @if(!app()->environment('testing'))
+        @vite(['resources/js/home.js'])
+    @endif
 
-            @if(isset($qrCode))
-            <div class="bg-white p-4 rounded-2xl shadow-inner transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                <div class="w-32 h-32 text-zinc-900">
-                    {!! $qrCode !!}
+    <section class="max-w-2xl mx-auto px-6 pb-16 animate-slide-up">
+        <div class="bg-black rounded-[2.5rem] p-10 md:p-14 text-white relative overflow-hidden shadow-2xl border border-white/5">
+            
+            <div class="relative z-10 flex flex-col md:flex-row gap-10 md:gap-12 items-center justify-between">
+                <div class="flex-1 space-y-6 text-center md:text-left">
+                    <div>
+                        <h2 class="text-3xl font-bold tracking-tight mb-3">Link berhasil dibuat!</h2>
+                        <p class="text-zinc-400 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
+                            Kamu bisa melihat daftar tautan yang kamu buat di halaman riwayat.
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="text-xl md:text-xl font-bold text-violet-500 break-all leading-tight">
+                            {{ $link->full_short_url }}
+                        </div>
+
+                        <button 
+                            onclick="copyToClipboard('{{ $link->full_short_url }}')"
+                            class="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors group"
+                        >
+                            <span class="material-symbols-outlined text-lg group-active:scale-90 transition-transform">
+                                content_copy
+                            </span>
+                            <span id="copy-text" class="text-sm font-medium">Salin Tautan</span>
+                        </button>
+                    </div>
                 </div>
+
+                <div class="flex flex-col items-center gap-6 shrink-0">
+                    <div id="qr-container" class="bg-white p-4 rounded-4xl shadow-2xl w-50 h-50 md:w-50 md:h-50 flex items-center justify-center">
+                        <div class="w-full h-full text-black flex items-center justify-center">
+                            {!! $link->qr_code_svg !!}
+                        </div>
+                    </div>
+                    
+                    <button 
+                        onclick="downloadQR(this)"
+                        data-slug="{{ $link->slug }}"
+                        class="flex items-center gap-2 px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-full text-[10px] font-bold uppercase tracking-widest transition-all active:scale-95 shadow-lg border border-white/5"
+                    >
+                        <span class="material-symbols-outlined text-sm">download</span>
+                        Unduh QR
+                    </button>
+                </div>
+
             </div>
-            @endif
         </div>
-    </div>
-</section>
+    </section>
 @endif
 
 {{-- Bento Grid Features --}}
@@ -178,19 +203,6 @@
         
     </div>
 </section>
-
-<script>
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text);
-        const status = document.getElementById('copy-status');
-        status.classList.remove('opacity-0');
-        status.classList.add('opacity-100');
-        setTimeout(() => {
-            status.classList.add('opacity-0');
-            status.classList.remove('opacity-100');
-        }, 2000);
-    }
-</script>
 
 <style>
     @keyframes fade-in { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }

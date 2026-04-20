@@ -15,17 +15,13 @@ class LinkController extends Controller
         private UrlShortenerService $urlShortenerService,
     ) {}
 
-    /**
-     * Show the home page.
-     */
+    // Tampilkan halaman home
     public function index(): View
     {
         return view('home');
     }
 
-    /**
-     * Shorten a URL and return the result.
-     */
+    // Perpendek URL dan kirim hasil
     public function store(Request $request): View|RedirectResponse
     {
         $request->validate([
@@ -33,27 +29,25 @@ class LinkController extends Controller
             'alias' => ['nullable', 'string'],
         ]);
 
-        $url   = $request->input('url');
-        $alias = $request->input('alias') ?: null;
-
         try {
-            $link = $this->urlShortenerService->shorten($url, $alias);
+            $link = $this->urlShortenerService->shorten(
+                $request->input('url'), 
+                $request->input('alias')
+            );
 
-            $shortUrl = config('app.url') . '/' . $link->slug;
-
+            // Langsung kirim ke view dengan variabel yang sudah siap pakai
             return view('home', [
                 'link'     => $link,
-                'shortUrl' => $shortUrl,
+                'shortUrl' => config('app.url') . '/' . $link->slug,
                 'qrCode'   => $link->qr_code_svg,
             ]);
+            
         } catch (InvalidArgumentException $e) {
             return back()->withErrors(['url' => $e->getMessage()])->withInput();
         }
     }
 
-    /**
-     * Delete a link and redirect to history.
-     */
+    // Hapus link dan balik ke history
     public function destroy(Link $link): RedirectResponse
     {
         $this->urlShortenerService->delete($link);
@@ -61,9 +55,7 @@ class LinkController extends Controller
         return redirect('/history');
     }
 
-    /**
-     * Update a link's destination URL and redirect to history.
-     */
+    // Update tujuan URL dan balik ke history
     public function update(Request $request, Link $link): RedirectResponse
     {
         $request->validate([

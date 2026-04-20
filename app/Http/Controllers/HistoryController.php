@@ -7,13 +7,11 @@ use Illuminate\View\View;
 
 class HistoryController extends Controller
 {
-    /**
-     * Show all links ordered by newest first.
-     */
+    // Tunjukkan semua link diurutkan dari yang terbaru
     public function index(): View
-    {
-        $links = Link::latest()->get();
-
-        return view('history', ['links' => $links]);
-    }
+{
+    return view('history', [
+        'links' => Link::latest()->get()
+    ]);
+}
 }

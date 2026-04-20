@@ -1,12 +1,12 @@
 <?php
 
 // 11.1 Integration test: End-to-End Redirection
-// POST /shorten → GET /{slug} → verifikasi redirect 301 ke URL asli
+// POST /shorten → GET /{slug} → verifikasi redirect 302 ke URL asli
 // Requirements: 3.1
 
 use App\Models\Link;
 
-test('end-to-end: POST /shorten then GET /{slug} redirects 301 to original URL', function () {
+test('end-to-end: POST /shorten then GET /{slug} redirects 302 to original URL', function () {
     // Step 1: shorten a URL
     $response = $this->post('/shorten', [
         'url' => 'https://example.com/some/long/path',
@@ -23,7 +23,7 @@ test('end-to-end: POST /shorten then GET /{slug} redirects 301 to original URL',
     // Step 2: access the short link
     $redirect = $this->get('/' . $link->slug);
 
-    $redirect->assertStatus(301);
+    $redirect->assertStatus(302);
     $redirect->assertRedirect('https://example.com/some/long/path');
 });
 

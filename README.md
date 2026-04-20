@@ -23,22 +23,23 @@
 
 ## Deskripsi
 
-Kecilin adalah layanan manajemen tautan modern berbasis web yang dibangun dengan Laravel. Ubah URL panjang menjadi tautan pendek bermerek dalam hitungan detik, lengkap dengan:
+Kecilin adalah aplikasi berbasis web yang memudahkan kamu untuk mengelola tautan. Dengan Kecilin, kamu bisa mengubah URL yang panjang dan rumit menjadi tautan pendek yang rapi hanya dalam hitungan detik. Aplikasi ini dibangun menggunakan framework Laravel dan dilengkapi dengan berbagai fitur:
 
-- **Pemendekan URL otomatis** — slug 6 karakter acak atau alias kustom pilihan sendiri
-- **QR Code instan** — setiap tautan pendek langsung dilengkapi QR Code SVG yang siap scan
-- **Pelacakan klik real-time** — pantau performa tautan dengan dashboard analitik tren harian
-- **Filter domain berbahaya** — blacklist otomatis mencegah penyalahgunaan platform
-- **Manajemen tautan** — edit URL tujuan atau hapus tautan kapan saja
+- **Pemendek URL Otomatis** — Gunakan kode acak 6 karakter atau buat nama unik (alias) kamu sendiri.
+- **QR Code Instan** — Setiap tautan yang dibuat otomatis mendapatkan QR Code (format SVG) yang siap scan dan diunduh.
+- **Pantau Klik (Analitik)** — Lihat berapa banyak orang yang mengeklik tautanmu melalui grafik tren harian.
+- **Keamanan Link** — Sistem secara otomatis memblokir domain berbahaya (blacklist) untuk menjaga keamanan pengguna.
+- **Manajemen Mandiri** — Kamu bebas mengubah alamat tujuan tautan atau menghapusnya kapan saja.
 
 ## Cara Menjalankan Aplikasi
 
 ### Prasyarat
 
+Sebelum memulai, pastikan perangkat kamu sudah terpasang:
 - PHP 8.2+
-- Composer
-- Node.js & npm
-- MySQL (untuk produksi) atau SQLite (untuk development lokal)
+- Composer (manajer paket PHP)
+- Node.js & npm (untuk tampilan antarmuka)
+- MySQL (digunakan untuk menyimpan data dan analitik secara stabil)
 
 ### Langkah Instalasi
 
@@ -47,7 +48,7 @@ Kecilin adalah layanan manajemen tautan modern berbasis web yang dibangun dengan
 git clone https://github.com/thomas-herpin/kecilin.git
 cd kecilin
 
-# 2. Install dependency PHP dan Node
+# 2. Pasang library pendukung (PHP & Node)
 composer install
 npm install
 
@@ -56,37 +57,30 @@ cp .env.example .env
 php artisan key:generate
 
 # 4. Konfigurasi database di .env
-# Untuk MySQL:
+# Buka file .env dan sesuaikan bagian ini dengan data MySQL kamu:
 #   DB_CONNECTION=mysql
+#   DB_HOST=127.0.0.1
+#   DB_PORT=3306
 #   DB_DATABASE=kecilin
 #   DB_USERNAME=root
 #   DB_PASSWORD=secret
-#
-# Untuk SQLite lokal:
-#   DB_CONNECTION=sqlite
-#   DB_DATABASE=/absolute/path/to/database/database.sqlite
 
-# 5. Jalankan migrasi
+# 5. Jalankan migrasi database
 php artisan migrate
 
 # 6. Build asset frontend
 npm run build
 ```
 
-Atau gunakan shortcut composer:
-
-```bash
-composer run setup
-```
-
 ### Menjalankan Server Development
 
-```bash
-# Jalankan semua service sekaligus (server, queue, log, vite)
-composer run dev
+Jalankan di terminal yang berbeda:
 
-# Atau manual:
+```bash
+# Terminal 1
 php artisan serve
+
+# Terminal 1
 npm run dev
 ```
 
@@ -94,32 +88,28 @@ Aplikasi tersedia di `http://localhost:8000`.
 
 ## Cara Menjalankan Test
 
-Test menggunakan SQLite in-memory sehingga tidak memerlukan konfigurasi database tambahan.
+Pengujian dilakukan untuk memastikan semua fitur berjalan normal tanpa ada kerusakan kode.
 
 ```bash
-# Jalankan semua test suite
+# Jalankan semua pengujian sekaligus
 php artisan test
 
 # Atau via composer
 composer run test
 
-# Jalankan per suite
+# Jalankan per bagian tertentu
 php artisan test --testsuite=Unit
-php artisan test --testsuite=Integration
 php artisan test --testsuite=Property
-php artisan test --testsuite=Feature
-
-# Jalankan dengan output verbose
-php artisan test --verbose
+php artisan test --testsuite=Integration
 ```
 
 ## Strategi Pengujian
 
-Kecilin menggunakan pendekatan **dual testing** yang saling melengkapi: unit test untuk memverifikasi contoh spesifik, dan property-based test untuk memverifikasi jaminan universal di seluruh ruang input.
+Kecilin telah melalui tiga tahapan pengujian, yaitu **unit test** untuk memverifikasi fungsi dasar, **property-based test** untuk menguji ketahanan sistem terhadap berbagai variasi data acak, serta **integration test** untuk memastikan seluruh alur sistem mulai dari input link hingga penyimpanan ke database berjalan dengan baik tanpa kendala.
 
 ### Unit Tests (`tests/Unit/`) — 5 file, ~30 test case
 
-Memverifikasi perilaku spesifik setiap service secara terisolasi:
+Memastikan setiap layanan aplikasi bekerja dengan benar secara terpisah:
 
 | File | Cakupan |
 |---|---|
@@ -131,7 +121,7 @@ Memverifikasi perilaku spesifik setiap service secara terisolasi:
 
 ### Property-Based Tests (`tests/Property/`) — 5 file, 10 properti
 
-Memverifikasi **jaminan universal** yang harus berlaku untuk semua input yang mungkin, dijalankan minimum 100 iterasi per properti:
+Menguji aturan utama aplikasi dengan semua input yang mungkin:
 
 | Properti | Jaminan |
 |---|---|
@@ -148,11 +138,11 @@ Memverifikasi **jaminan universal** yang harus berlaku untuk semua input yang mu
 
 ### Integration Tests (`tests/Integration/`) — 5 file, 14 test case
 
-Memverifikasi alur end-to-end antar komponen dengan database nyata (SQLite in-memory):
+Menguji bagaimana seluruh komponen bekerja sama dalam alur yang utuh untuk memastikan tidak ada hambatan saat digunakan oleh pengguna:
 
 | File | Skenario |
 |---|---|
-| `RedirectFlowTest` | POST /shorten → GET /{slug} → redirect 301 ke URL asli |
+| `RedirectFlowTest` | POST /shorten → GET /{slug} → redirect 302 ke URL asli |
 | `AnalyticsPersistenceTest` | Klik tersimpan, terbaca, dan teragregasi per hari dengan benar |
 | `CollisionHandlingTest` | Slug bertabrakan di-regenerasi otomatis; exception setelah 10x gagal |
 | `LinkCreationWorkflowTest` | Workflow lengkap: input → DB → QR Code + tautan pendek di view |
