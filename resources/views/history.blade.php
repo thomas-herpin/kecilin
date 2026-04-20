@@ -10,7 +10,7 @@
             <h1 class="text-2xl font-extrabold text-zinc-900">Riwayat Tautan</h1>
             <p class="text-sm text-zinc-500 mt-1">Semua tautan yang telah kamu buat, diurutkan terbaru.</p>
         </div>
-        <a href="/" class="text-sm bg-violet-600 hover:bg-violet-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors">
+        <a href="/" class="text-[13px] md:text-sm bg-violet-600 hover:bg-violet-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-colors whitespace-nowrap shrink-0">
             + Buat Tautan
         </a>
     </div>
@@ -53,40 +53,49 @@
             {{-- Actions --}}
             <div class="mt-4 flex flex-wrap items-center gap-3 border-t border-zinc-50 pt-4">
 
+                {{-- Copy & Download QR Buttons --}}
+                <div class="flex items-center gap-2 mr-auto">
+                    <button 
+                        onclick="copyHistoryLink(this, '{{ $link->full_short_url }}')"
+                        class="flex items-center gap-1.5 text-xs bg-violet-50 hover:bg-violet-100 text-violet-600 font-bold px-3 py-1.5 rounded-lg transition-all active:scale-95"
+                    >
+                        <span class="material-symbols-outlined text-sm">content_copy</span>
+                        <span class="label">Salin</span>
+                    </button>   
+
+                    <div id="qr-{{ $link->id }}" class="hidden">{!! $link->qr_code_svg !!}</div>
+                    <button 
+                        onclick="downloadHistoryQR('{{ $link->id }}', '{{ $link->slug }}')"
+                        class="flex items-center gap-1.5 text-xs bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold px-3 py-1.5 rounded-lg transition-all active:scale-95"
+                    >
+                        <span class="material-symbols-outlined text-sm">download</span>
+                        QR
+                    </button>
+                </div>
+
                 {{-- Edit Form --}}
-                <form method="POST" action="/links/{{ $link->id }}" class="flex items-center gap-2 flex-1 min-w-0">
+                <form method="POST" action="/links/{{ $link->id }}" class="flex items-center gap-2 flex-1 md:flex-initial min-w-50">
                     @csrf
                     @method('PUT')
                     <input
                         type="text"
                         name="url"
-                        placeholder="URL baru..."
-                        class="flex-1 min-w-0 border border-zinc-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-violet-400 transition"
+                        placeholder="Edit URL asli..."
+                        class="flex-1 border border-zinc-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-violet-400 transition"
                     >
-                    <button
-                        type="submit"
-                        class="text-xs bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
-                    >
-                        Simpan
+                    <button type="submit" class="text-xs bg-zinc-900 text-white font-medium px-3 py-1.5 rounded-lg hover:bg-zinc-800 transition-colors">
+                        Update
                     </button>
                 </form>
 
                 {{-- Delete Form --}}
-                <form
-                    method="POST"
-                    action="/links/{{ $link->id }}"
-                    onsubmit="return confirm('Hapus tautan /{{ $link->slug }}? Semua data klik akan ikut terhapus.')"
-                >
+                <form method="POST" action="/links/{{ $link->id }}" onsubmit="return confirm('Hapus tautan?')">
                     @csrf
                     @method('DELETE')
-                    <button
-                        type="submit"
-                        class="text-xs bg-red-50 hover:bg-red-100 text-red-600 font-medium px-3 py-1.5 rounded-lg transition-colors"
-                    >
+                    <button type="submit" class="text-xs text-red-400 hover:text-red-600 font-medium px-2 py-1.5 transition-colors">
                         Hapus
                     </button>
                 </form>
-
             </div>
         </div>
     @empty
@@ -100,5 +109,7 @@
         </div>
     @endforelse
 </div>
+
+@vite(['resources/js/history.js'])
 
 @endsection

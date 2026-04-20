@@ -15,9 +15,16 @@ class Link extends Model
         'total_clicks',
     ];
 
+    protected $appends = ['full_short_url'];
+
     protected $casts = [
         'total_clicks' => 'integer',
     ];
+
+    public function getFullShortUrlAttribute(): string
+    {
+        return config('app.url') . '/' . $this->slug;
+    }
 
     public function clicks(): HasMany
     {
