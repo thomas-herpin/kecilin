@@ -81,7 +81,9 @@
 
 {{-- Result Section --}}
 @if(isset($link))
-    @vite(['resources/js/home.js'])
+    @if(!app()->environment('testing'))
+        @vite(['resources/js/home.js'])
+    @endif
 
     <section class="max-w-2xl mx-auto px-6 pb-16 animate-slide-up">
         <div class="bg-black rounded-[2.5rem] p-10 md:p-14 text-white relative overflow-hidden shadow-2xl border border-white/5">

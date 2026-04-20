@@ -110,6 +110,8 @@
     @endforelse
 </div>
 
-@vite(['resources/js/history.js'])
+@if(!app()->environment('testing'))
+    @vite(['resources/js/history.js'])
+@endif
 
 @endsection
