@@ -9,14 +9,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml" style="text-decoration:none;">
-    <img src="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml/badge.svg?branch=main" alt="Build Status" />
-  </a>
-  <a href="https://codecov.io/gh/thomas-herpin/kecilin" style="text-decoration:none;">
-    <img src="https://codecov.io/gh/thomas-herpin/kecilin/branch/main/graph/badge.svg" alt="Coverage" />
-  </a>
-  <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white" alt="PHP 8.2+" />
-  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white" alt="Laravel 12" />
+  <a href="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml"><img src="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml/badge.svg?branch=main" alt="Tests"></a>
+  <a href="https://codecov.io/gh/thomas-herpin/kecilin"><img src="https://codecov.io/gh/thomas-herpin/kecilin/branch/main/graph/badge.svg" alt="Coverage"></a>
+  <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white" alt="PHP 8.2+">
+  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white" alt="Laravel 12">
 </p>
 
 ---
