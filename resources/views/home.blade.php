@@ -154,7 +154,7 @@
 
         {{-- QR Code --}}
         <div class="md:col-span-2 bg-zinc-900 rounded-[2.5rem] p-10 text-white hover:bg-zinc-800 transition-all duration-500 relative group overflow-hidden">
-            <div class="w-14 h-14 rounded-2xl bg-fuchsia-500 text-white flex items-center justify-center mb-8 shadow-lg shadow-fuchsia-900/20">
+            <div class="w-14 h-14 rounded-2xl bg-violet-600 text-white flex items-center justify-center mb-8 shadow-lg shadow-fuchsia-900/20">
                 <span class="material-symbols-outlined text-3xl">
                     qr_code_2
                 </span>
@@ -195,7 +195,7 @@
                 <div class="relative w-auto flex justify-start">
                     <div class="relative bg-white/10 backdrop-blur-xl rounded-2xl px-5 py-3 md:px-6 md:py-4 border border-white/20 shadow-2xl flex items-center shrink-0">
                         <span class="text-zinc-500 font-mono text-xs md:text-sm">kecilin.app/</span>
-                        <span class="text-violet-400 font-mono font-bold text-xs md:text-sm">brand-kamu</span>
+                        <span class="text-violet-600 font-mono font-bold text-xs md:text-sm">brand-kamu</span>
                     </div>
                 </div>
             </div>

@@ -5,6 +5,8 @@
 // Requirements: 3.1
 
 use App\Models\Link;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+uses(RefreshDatabase::class);
 
 test('end-to-end: POST /shorten then GET /{slug} redirects 302 to original URL', function () {
     // Step 1: shorten a URL
@@ -38,4 +40,34 @@ test('redirect increments click count on valid access', function () {
     $this->get('/abc123');
 
     expect($link->fresh()->total_clicks)->toBe(1);
+});
+
+test('user can update a link destination', function () {
+    $link = Link::create([
+        'original_url' => 'https://old.com',
+        'slug' => 'oldie',
+        'qr_code_svg' => '<svg>dummy</svg>'
+    ]);
+
+    $response = $this->put("/links/{$link->id}", [
+        'url' => 'https://new-destination.com'
+    ]);
+
+    $response->assertRedirect('/history');
+    expect($link->fresh()->original_url)->toBe('https://new-destination.com');
+});
+
+test('update fails and redirects back with error for invalid url', function () {
+    $link = Link::create([
+        'original_url' => 'https://old.com',
+        'slug' => 'oldie',
+        'qr_code_svg' => '<svg>dummy</svg>'
+    ]);
+
+    $response = $this->put("/links/{$link->id}", [
+        'url' => 'bukan-url-valid' 
+    ]);
+
+    $response->assertStatus(302); // Redirect back
+    $response->assertSessionHasErrors('url');
 });

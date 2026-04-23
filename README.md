@@ -9,14 +9,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml">
-    <img src="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml/badge.svg?branch=main" alt="Build Status" />
-  </a>
-  <a href="https://codecov.io/gh/thomas-herpin/kecilin">
-    <img src="https://codecov.io/gh/thomas-herpin/kecilin/branch/main/graph/badge.svg" alt="Coverage" />
-  </a>
-  <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white" alt="PHP 8.2+" />
-  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white" alt="Laravel 12" />
+  <a href="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml"><img src="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml/badge.svg?branch=main" alt="Tests"></a>
+  <a href="https://codecov.io/gh/thomas-herpin/kecilin"><img src="https://codecov.io/gh/thomas-herpin/kecilin/branch/main/graph/badge.svg" alt="Coverage"></a>
+  <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white" alt="PHP 8.2+">
+  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white" alt="Laravel 12">
 </p>
 
 ---
@@ -107,7 +103,7 @@ php artisan test --testsuite=Integration
 
 Kecilin telah melalui tiga tahapan pengujian, yaitu **unit test** untuk memverifikasi fungsi dasar, **property-based test** untuk menguji ketahanan sistem terhadap berbagai variasi data acak, serta **integration test** untuk memastikan seluruh alur sistem mulai dari input link hingga penyimpanan ke database berjalan dengan baik tanpa kendala.
 
-### Unit Tests (`tests/Unit/`) — 5 file, ~30 test case
+### Unit Tests (`tests/Unit/`) — 7 file, ~40 test case
 
 Memastikan setiap layanan aplikasi bekerja dengan benar secara terpisah:
 
@@ -118,6 +114,8 @@ Memastikan setiap layanan aplikasi bekerja dengan benar secara terpisah:
 | `QrCodeGeneratorTest` | Output SVG valid, embedding URL |
 | `ClickTrackerTest` | Deteksi bot, presisi penghitung klik, timestamp |
 | `UrlShortenerServiceTest` | Validasi skema URL, normalisasi, alias duplikat, persistensi |
+| `LinkModelTest` | Accessor `full_short_url`, relasi ke klik, dan pengujian `scopeLatest` |
+| `ClickModelTest` | Verifikasi relasi `belongsTo` ke model Link |
 
 ### Property-Based Tests (`tests/Property/`) — 5 file, 10 properti
 
@@ -136,14 +134,16 @@ Menguji aturan utama aplikasi dengan semua input yang mungkin:
 | P9: Cascade delete | Menghapus tautan menghapus semua klik terkait tanpa sisa |
 | P10: Daily click aggregation | Agregasi harian akurat sesuai jumlah klik yang dicatat |
 
-### Integration Tests (`tests/Integration/`) — 5 file, 14 test case
+### Integration Tests (`tests/Integration/`) — 7 file, ~20 test case
 
 Menguji bagaimana seluruh komponen bekerja sama dalam alur yang utuh untuk memastikan tidak ada hambatan saat digunakan oleh pengguna:
 
 | File | Skenario |
 |---|---|
-| `RedirectFlowTest` | POST /shorten → GET /{slug} → redirect 302 ke URL asli |
+| `RedirectFlowTest` | POST /shorten → GET /{slug} → redirect 302 ke URL asli, serta update URL tujuan |
 | `AnalyticsPersistenceTest` | Klik tersimpan, terbaca, dan teragregasi per hari dengan benar |
 | `CollisionHandlingTest` | Slug bertabrakan di-regenerasi otomatis; exception setelah 10x gagal |
 | `LinkCreationWorkflowTest` | Workflow lengkap: input → DB → QR Code + tautan pendek di view |
 | `NotFoundAndCascadeTest` | Slug tidak ada → 404 kustom; hapus tautan → cascade delete klik |
+| `HistoryViewTest` | Memastikan daftar riwayat tautan dapat dimuat dan diurutkan dengan benar |
+| `AnalyticsViewTest` | Verifikasi dashboard analitik dan integritas data grafik tren klik |
