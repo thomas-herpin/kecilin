@@ -15,30 +15,26 @@ class UrlShortenerService
 
     /**
      * Shorten a URL, optionally using a custom alias as the slug.
-     *
-     * @throws InvalidArgumentException if the URL scheme is invalid, domain is blocked,
-     *                                  or alias is invalid/already taken
      */
     public function shorten(string $url, ?string $alias = null): Link
     {
-        // Validate URL scheme (must be http:// or https://)
-        if (!preg_match('#^https?://#i', $url)) {
+        // 1. Normalize and validate
+        $url = strtolower(rtrim($url, '/'));
+
+        if (!preg_match('#^https?://#', $url)) {
             throw new InvalidArgumentException(
                 'URL harus dimulai dengan http:// atau https://'
             );
         }
 
-        // Normalize: remove trailing slash
-        $url = rtrim($url, '/');
-
-        // Check blacklist
+        // 2. Check blacklist
         if ($this->blacklistFilter->isDomainBlocked($url)) {
             throw new InvalidArgumentException(
                 'Domain URL tersebut termasuk dalam daftar hitam dan tidak dapat dipendekkan.'
             );
         }
 
-        // Resolve slug
+        // 3. Resolve slug
         if ($alias !== null) {
             if (!$this->slugGenerator->validateAlias($alias)) {
                 throw new InvalidArgumentException(
@@ -59,11 +55,10 @@ class UrlShortenerService
             );
         }
 
-        // Generate QR Code for the full short link
+        // 4. Generate QR Code
         $shortLink = config('app.url') . '/' . $slug;
         $qrCodeSvg = $this->qrCodeGenerator->generateSvg($shortLink);
 
-        // Persist and return
         return Link::create([
             'original_url' => $url,
             'slug'         => $slug,
@@ -74,18 +69,22 @@ class UrlShortenerService
 
     /**
      * Update the destination URL of an existing link.
-     *
-     * @throws InvalidArgumentException if the new URL scheme is invalid
      */
     public function update(Link $link, string $newUrl): Link
     {
-        if (!preg_match('#^https?://#i', $newUrl)) {
+        $newUrl = strtolower(rtrim($newUrl, '/'));
+
+        if (!preg_match('#^https?://#', $newUrl)) {
             throw new InvalidArgumentException(
                 'URL harus dimulai dengan http:// atau https://'
             );
         }
 
-        $newUrl = rtrim($newUrl, '/');
+        if ($this->blacklistFilter->isDomainBlocked($newUrl)) {
+            throw new InvalidArgumentException(
+                'Domain URL tersebut termasuk dalam daftar hitam.'
+            );
+        }
 
         $link->original_url = $newUrl;
         $link->save();
@@ -94,7 +93,7 @@ class UrlShortenerService
     }
 
     /**
-     * Delete a link (CASCADE will remove related clicks).
+     * Delete a link.
      */
     public function delete(Link $link): void
     {

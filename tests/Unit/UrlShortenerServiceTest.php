@@ -63,10 +63,22 @@ test('shorten does not alter URL without trailing slash', function () {
     expect($link->original_url)->toBe('https://example.com/page');
 });
 
+test('shorten normalizes URL with multiple slashes and uppercase scheme', function () {
+    $link = $this->service->shorten('HTTPS://EXAMPLE.COM/path///');
+    expect($link->original_url)->toBe('https://example.com/path');
+});
+
 // --- shorten(): blacklist ---
 
 test('shorten throws InvalidArgumentException for blacklisted domain', function () {
     expect(fn() => $this->service->shorten('http://malware.com/page'))
+        ->toThrow(InvalidArgumentException::class);
+});
+
+test('update throws InvalidArgumentException for blacklisted new URL', function () {
+    $link = $this->service->shorten('https://safe-url.com');
+    
+    expect(fn() => $this->service->update($link, 'http://malware.com'))
         ->toThrow(InvalidArgumentException::class);
 });
 
@@ -92,6 +104,26 @@ test('shorten throws InvalidArgumentException for duplicate alias', function () 
 
     expect(fn() => $this->service->shorten('https://other.com', 'taken'))
         ->toThrow(InvalidArgumentException::class);
+});
+
+test('shorten throws InvalidArgumentException for alias too long (51 chars)', function () {
+    $longAlias = str_repeat('a', 51);
+    expect(fn() => $this->service->shorten('https://example.com', $longAlias))
+        ->toThrow(InvalidArgumentException::class);
+});
+
+test('shorten throws RuntimeException when auto-generated slug always collides', function () {
+    $mockSlugGen = Mockery::mock(App\Services\SlugGenerator::class);
+    $mockSlugGen->shouldReceive('generateUnique')->andThrow(new RuntimeException("Max attempts reached"));
+
+    $serviceWithMock = new App\Services\UrlShortenerService(
+        new App\Services\BlacklistFilter(),
+        $mockSlugGen,
+        new App\Services\QrCodeGenerator()
+    );
+
+    expect(fn() => $serviceWithMock->shorten('https://example.com'))
+        ->toThrow(RuntimeException::class);
 });
 
 // --- shorten(): auto slug generation ---

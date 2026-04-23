@@ -63,7 +63,7 @@ test('record creates a Click record for a valid (non-bot) request', function () 
     $link = Link::create([
         'original_url' => 'https://example.com',
         'slug'         => 'abc123',
-        'qr_code_svg'  => '<svg></svg>',
+        'qr_code_svg'  => '<svg>dummy</svg>',
         'total_clicks' => 0,
     ]);
 
@@ -80,7 +80,7 @@ test('record increments total_clicks by exactly 1 for a valid click', function (
     $link = Link::create([
         'original_url' => 'https://example.com',
         'slug'         => 'def456',
-        'qr_code_svg'  => '<svg></svg>',
+        'qr_code_svg'  => '<svg>dummy</svg>',
         'total_clicks' => 5,
     ]);
 
@@ -96,7 +96,7 @@ test('record does NOT create a Click record for a bot request', function () {
     $link = Link::create([
         'original_url' => 'https://example.com',
         'slug'         => 'ghi789',
-        'qr_code_svg'  => '<svg></svg>',
+        'qr_code_svg'  => '<svg>dummy</svg>',
         'total_clicks' => 0,
     ]);
 
@@ -113,7 +113,7 @@ test('record does NOT increment total_clicks for a bot request', function () {
     $link = Link::create([
         'original_url' => 'https://example.com',
         'slug'         => 'jkl012',
-        'qr_code_svg'  => '<svg></svg>',
+        'qr_code_svg'  => '<svg>dummy</svg>',
         'total_clicks' => 3,
     ]);
 
@@ -129,7 +129,7 @@ test('record stores clicked_at timestamp', function () {
     $link = Link::create([
         'original_url' => 'https://example.com',
         'slug'         => 'mno345',
-        'qr_code_svg'  => '<svg></svg>',
+        'qr_code_svg'  => '<svg>dummy</svg>',
         'total_clicks' => 0,
     ]);
 
