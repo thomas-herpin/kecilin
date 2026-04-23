@@ -27,21 +27,27 @@ test('Link model has clicks relationship', function () {
 });
 
 test('Link model uses latest scope', function () {
-    Carbon::setTestNow(now()->subHour());
+    $oldTime = now()->subHour();
+    Carbon::setTestNow($oldTime);
     Link::create([
         'original_url' => 'https://a.com', 
         'slug' => 'old', 
-        'qr_code_svg' => '<svg>dummy</svg>'
+        'qr_code_svg' => '<svg>dummy</svg>',
+        'created_at' => $oldTime
     ]);
 
-    Carbon::setTestNow(now()->addHour());
+    $newTime = now()->addHour();
+    Carbon::setTestNow($newTime);
     Link::create([
         'original_url' => 'https://b.com', 
         'slug' => 'new', 
-        'qr_code_svg' => '<svg>dummy</svg>'
+        'qr_code_svg' => '<svg>dummy</svg>',
+        'created_at' => $newTime
     ]);
 
+    $result = Link::latest()->first();
+    
     Carbon::setTestNow();
 
-    expect(Link::latest()->first()->slug)->toBe('new');
+    expect($result->slug)->toBe('new');
 });
