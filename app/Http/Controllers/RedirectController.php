@@ -28,6 +28,6 @@ class RedirectController extends Controller
 
         $this->clickTrackerService->record($link, $request);
 
-        return redirect()->away($link->original_url, 301);
+        return redirect()->away($link->original_url, 302);
     }
 }
