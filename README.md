@@ -3,12 +3,6 @@
 </p>
 
 <p align="center">
-  <a href="https://kecilin.up.railway.app" target="_blank">
-    <img src="https://img.shields.io/badge/Kunjungi_Website-7C3AED?style=for-the-badge&logo=rocket&logoColor=white" alt="Kunjungi Website" />
-  </a>
-</p>
-
-<p align="center">
   <a href="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml"><img src="https://github.com/thomas-herpin/kecilin/actions/workflows/tests.yml/badge.svg?branch=main" alt="Tests"></a>
   <a href="https://codecov.io/gh/thomas-herpin/kecilin"><img src="https://codecov.io/gh/thomas-herpin/kecilin/branch/main/graph/badge.svg" alt="Coverage"></a>
   <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white" alt="PHP 8.2+">
